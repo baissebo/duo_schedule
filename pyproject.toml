@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "duo-schedule"
+version = "0.1.0"
+description = ""
+authors = ["Alexander Gedz <gedz.buh@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "4.2.2"
+requests = "^2.31.0"
+psycopg2-binary = "^2.9.9"
+pillow = "^10.3.0"
+black = "^24.4.2"
+shell = "^1.0.1"
+ipython = "^8.24.0"
+django-autoslug = "^1.9.9"
+django-crispy-forms = "^2.2"
+crispy-bootstrap4 = "^2024.1"
+django-phonenumber-field = "^8.0.0"
+phonenumbers = "^8.13.39"
+python-dotenv = "^1.0.1"
+python-dateutil = "^2.9.0.post0"
+pytz = "^2024.1"
+django-crontab = "^0.7.1"
+python-slugify = "^8.0.4"
+redis = "^5.0.8"
+isort = "^5.13.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
