@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-light mb-4">
+                <div class="card-header bg-light text-black">
+                    <h3>Профиль пользователя</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Имя:</strong> {{ user.first_name }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Email:</strong> {{ user.email }}</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <p><strong>Телефон:</strong> {{ user.phone }}</p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'users:profile_edit' %}" class="btn btn-light ">Редактировать профиль</a>
+                            <a href="{% url 'users:profile_delete' user.pk %}" class="btn btn-danger w-50 text-black">Удалить
+                                профиль</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}

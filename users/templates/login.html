@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card w-50">
+        <form method="post" enctype="multipart/form-data">
+            <div class="card-header text-white">
+                <h3 class="card-title">Вход</h3>
+            </div>
+            <div class="card-body">
+                {% csrf_token %}
+                {{ form.as_p }}
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-light"> Войти</button>
+                <a href="{% url 'users:new_password' %}" class="btn btn-link"> Забыли пароль? </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

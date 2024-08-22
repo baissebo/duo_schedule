@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow p-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="text-center mb-0">Удалить профиль</h2>
+            </div>
+        </div>
+        <div class="text-center">
+            <p>Вы уверены, что хотите удалить профиль?</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Да, удалить</button>
+                <a href="{% url 'users:profile' %}" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
