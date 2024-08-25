@@ -1,0 +1,6 @@
+.btn.d-inline-flex.align-items-center{
+    background-image: linear-gradient(to right, #9b59b6, #2980b9);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}

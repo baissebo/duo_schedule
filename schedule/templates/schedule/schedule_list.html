@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row mb-3 text-center align-items-center">
+        <div class="col-md-9">
+            <a href="{% url 'users:user-list' %}" class="btn btn-secondary btn-lg"
+               style="background-image: linear-gradient(to right, #9b59b6, #2980b9);border-radius: 20px;">
+                Внесите ваши пожелания по графику
+            </a>
+        </div>
+    </div>
+    <div class="row mb-2 text-center">
+        <div class="col-md-9 themed-grid-col"><strong>Сентябрь</strong></div>
+    </div>
+    <div class="row mb-2 text-center">
+        <div class="col-md-2 themed-grid-col"><strong>Басалаев Евгений</strong></div>
+        <div class="col-md-1 themed-grid-col bg-primary">1</div>
+        <div class="col-md-1 themed-grid-col bg-danger">2</div>
+        <div class="col-md-1 themed-grid-col bg-danger">3</div>
+        <div class="col-md-1 themed-grid-col bg-danger">4</div>
+        <div class="col-md-1 themed-grid-col bg-danger">5</div>
+        <div class="col-md-1 themed-grid-col bg-danger">6</div>
+        <div class="col-md-1 themed-grid-col bg-danger">7</div>
+    </div>
+    <div class="row mb-2 text-center">
+        <div class="col-md-1 themed-grid-col bg-warning">8</div>
+        <div class="col-md-1 themed-grid-col">9</div>
+        <div class="col-md-1 themed-grid-col">10</div>
+        <div class="col-md-1 themed-grid-col">11</div>
+        <div class="col-md-1 themed-grid-col">12</div>
+        <div class="col-md-1 themed-grid-col">13</div>
+        <div class="col-md-1 themed-grid-col">14</div>
+        <div class="col-md-1 themed-grid-col">15</div>
+        <div class="col-md-1 themed-grid-col">16</div>
+    </div>
+    <div class="row mb-2 text-center">
+        <div class="col-md-1 themed-grid-col bg-warning">17</div>
+        <div class="col-md-1 themed-grid-col">18</div>
+        <div class="col-md-1 themed-grid-col">19</div>
+        <div class="col-md-1 themed-grid-col">20</div>
+        <div class="col-md-1 themed-grid-col">21</div>
+        <div class="col-md-1 themed-grid-col">22</div>
+        <div class="col-md-1 themed-grid-col">23</div>
+        <div class="col-md-1 themed-grid-col">24</div>
+        <div class="col-md-1 themed-grid-col">25</div>
+    </div>
+    <div class="row mb-2 text-center">
+        <div class="col-md-1 themed-grid-col bg-warning">26</div>
+        <div class="col-md-1 themed-grid-col bg-secondary">27</div>
+        <div class="col-md-1 themed-grid-col bg-secondary">28</div>
+        <div class="col-md-1 themed-grid-col bg-secondary">29</div>
+        <div class="col-md-1 themed-grid-col bg-secondary">30</div>
+    </div>
+</div>
+{% endblock %}
