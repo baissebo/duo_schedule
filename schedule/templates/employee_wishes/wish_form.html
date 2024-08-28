@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card w-50">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card-header">
+                {% if not object %}
+                <h3 class="card-title">Создать пожелание</h3>
+            </div>
+            {% else %}
+            <h3 class="card-title">Внести изменения</h3>
+    </div>
+    <strong class="ms-3">Текущая дата:</strong> {{ form.date.value }}
+    {% endif %}
+    <div class="card-body">
+        {% for field in form %}
+        <div class="form-group mb-3">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="card-footer d-flex justify-content-end">
+        {% if not object %}
+        <button type="submit" class="btn w-100 me-1"
+                style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
+            Создать
+        </button>
+        <a class="btn btn-secondary w-100" href="{% url 'schedule:wish-list' %}"
+           role="button">Назад</a>
+        {% else %}
+        <button type="submit" class="btn w-100 me-1"
+                style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
+            Изменить
+        </button>
+        <a class="btn btn-secondary w-100" href="{% url 'schedule:wish-detail' employeewish.pk %}"
+           role="button">Назад</a>
+        {% endif %}
+    </div>
+    </form>
+</div>
+</div>
+{% endblock %}

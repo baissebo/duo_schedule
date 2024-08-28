@@ -182,13 +182,13 @@
                 {% block content %}
                 {% endblock %}
             </div>
-            <div class="col-lg-1">
+            <div class="col-lg-2">
                 {% include 'includes/inc_menu.html' %}
             </div>
         </div>
     </div>
 </header>
-
+{% include 'includes/pagination.html' %}
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
 </body>

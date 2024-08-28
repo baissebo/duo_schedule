@@ -1,5 +1,6 @@
 from django.db import models
 
+from nullable import NULLABLE
 from users.models import User
 
 SHIFT_TYPES = (
@@ -18,9 +19,13 @@ class EmployeeWish(models.Model):
     shift_preference = models.CharField(
         max_length=20, choices=SHIFT_TYPES, verbose_name="Предпочтительный тип смены"
     )
+    comment = models.TextField(max_length=155, **NULLABLE, verbose_name="Комментарий")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     class Meta:
         unique_together = ("employee", "date", "shift_preference")
+        verbose_name = "Пожелание сотрудника"
+        verbose_name_plural = "Пожелания сотрудников"
 
 
 class Schedule(models.Model):

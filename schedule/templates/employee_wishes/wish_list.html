@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container marketing" style="margin-top: 10rem;">
+    <form method="get" class="mb-4">
+        <div class="col text-center">
+            <a href="{% url 'schedule:wish-create' %}" class="btn btn-lg"
+               style="background-image: linear-gradient(to right, #9b59b6, #2980b9);"
+            >Создать пожелание</a>
+        </div>
+        <div class="form-group">
+            <label for="sort-by">Сортировать по:</label>
+            <div class="col-sm-2">
+                <select class="form-control" id="sort-by" name="sort_by">
+                    <option value="-date">Убыванию</option>
+                    <option value="date">Возрастанию</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Фильтровать по:</label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="filter-morning" name="filter" value="morning">
+                {% if 'morning' in filters %}{% endif %}
+                <label class="form-check-label" for="filter-morning">Утро</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="filter-day" name="filter" value="day">
+                {% if 'day' in filters %}{% endif %}
+                <label class="form-check-label" for="filter-day">День</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="filter-night" name="filter" value="night">
+                {% if 'night' in filters %}{% endif %}
+                <label class="form-check-label" for="filter-night">Ночь</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="filter-free" name="filter" value="free">
+                {% if 'free' in filters %}{% endif %}
+                <label class="form-check-label" for="filter-free">Вых</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-secondary">Применить</button>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% if object_list %}
+        {% for employeewish in object_list %}
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {% with date=employeewish.date %}
+                    <p class="card-text">{{ date|date:"l, j F Y" }}</p>
+                    {% endwith %}
+                    {% if employeewish.shift_preference == 'morning' %}
+                    <p class="text-primary"><strong> {{ employeewish.get_shift_preference_display }} </strong></p>
+                    {% elif employeewish.shift_preference == 'day' %}
+                    <p class="text-secondary"><strong>{{ employeewish.get_shift_preference_display }}</strong></p>
+                    {% elif employeewish.shift_preference == 'night' %}
+                    <p class="text-warning"><strong>{{ employeewish.get_shift_preference_display }}</strong></p>
+                    {% else %}
+                    <p class="card-text"><strong>{{ employeewish.get_shift_preference_display }}</strong></p>
+                    {% endif %}
+                    {% if employeewish.comment %}
+                    <p class="card-text">Комментарий: {{ employeewish.comment }}</p>
+                    {% endif %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a class="btn btn-secondary" href="{% url 'schedule:wish-detail' employeewish.pk %}"
+                               role="button">Посмотреть</a>
+                        </div>
+                        <small class="text-body-secondary">{{ employeewish.created_at|timesince }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <h1>Упс...</h1>
+                    <p class="lead"><strong>Добавь пожелание, чтобы облегчить работу своим коллегам</strong></p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+    <div class="card shadow p-4 mb-5">
+        <h2 class="mb-4 text-center ">Удалить пожелание?</h2>
+        <form method="post" class="d-flex justify-content-center">
+            {% csrf_token %}
+            <div class="d-flex align-items-center">
+                <button type="submit" class="btn btn-danger me-3">Удалить</button>
+                <a href="{% url 'schedule:wish-detail' object.pk %}" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
