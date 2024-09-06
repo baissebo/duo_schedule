@@ -29,13 +29,12 @@ class EmployeeWish(models.Model):
 
 
 class Schedule(models.Model):
-    year = models.PositiveIntegerField(verbose_name="Год")
-    month = models.PositiveSmallIntegerField(verbose_name="Месяц")
+    date = models.DateField(verbose_name="Дата")
 
     class Meta:
         verbose_name = "График работы"
         verbose_name_plural = "Графики работ"
-        ordering = ["-month"]
+        ordering = ["-date"]
 
 
 class Shift(models.Model):

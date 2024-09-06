@@ -3,13 +3,17 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from schedule.apps import ScheduleConfig
-from schedule.views import ScheduleListView, EmployeeWishCreateView, EmployeeWishListView, EmployeeWishDetailView, \
-    EmployeeWishUpdateView, EmployeeWishDeleteView
+from schedule.views import (ScheduleListView, ScheduleDetailView, ScheduleCreateView, EmployeeWishCreateView,
+                            EmployeeWishListView, EmployeeWishDetailView, EmployeeWishUpdateView,
+                            EmployeeWishDeleteView, ShiftCreateView)
 
 app_name = ScheduleConfig.name
 
 urlpatterns = [
     path("schedule-list/", ScheduleListView.as_view(), name="schedule-list"),
+    path("schedule-create/", ScheduleCreateView.as_view(), name="schedule-create"),
+
+    path("shift-create/", ShiftCreateView.as_view(), name="shift-create"),
 
     path("wish-list/", EmployeeWishListView.as_view(), name="wish-list"),
     path("wish/<int:pk>/", EmployeeWishDetailView.as_view(), name="wish-detail"),

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card w-50">
+        <div class="card-header">
+            <h3 class="card-title">{% if not object %}Создать график{% else %}Изменить график{% endif %}</h3>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <label for="id_year">Год:</label>
+                    {{ form.year }}
+                </div>
+                <div class="form-group mb-3">
+                    <label for="id_month">Месяц:</label>
+                    {{ form.month }}
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-end">
+                <button type="submit" class="btn w-50 me-1"
+                        style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
+                    {% if not object %}Создать{% else %}Изменить{% endif %}
+                </button>
+                <a class="btn btn-secondary w-50" href="{% url 'schedule:schedule-list' %}" role="button">Назад</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

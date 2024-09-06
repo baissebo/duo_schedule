@@ -10,7 +10,7 @@ class EmployeeWish(admin.ModelAdmin):
 
 @admin.register(Schedule)
 class Schedule(admin.ModelAdmin):
-    list_display = ("year", "month")
+    list_display = ("date",)
 
 
 @admin.register(Shift)

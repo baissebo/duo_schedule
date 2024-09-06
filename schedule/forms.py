@@ -1,4 +1,9 @@
+import re
+from datetime import datetime
+
 from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
+from django.core.exceptions import ValidationError
 from django.forms import DateInput
 
 from schedule.models import Schedule, Shift, EmployeeWish
@@ -26,3 +31,38 @@ class EmployeeWishForm(forms.ModelForm):
                 raise forms.ValidationError("Так не пойдет! У тебя уже есть пожелание на эту дату и с этим типом смены")
 
         return cleaned_data
+
+
+class ScheduleForm(forms.ModelForm):
+    year = forms.CharField(
+        label="Год",
+        max_length=4,
+        widget=forms.TextInput(attrs={"placeholder": "Введите год", "type": "number"})
+    )
+    month = forms.ChoiceField(
+        label="Месяц",
+        choices=[
+            (1, "Январь"), (2, "Февраль"), (3, "Март"),
+            (4, "Апрель"), (5, "Май"), (6, "Июнь"),
+            (7, "Июль"), (8, "Август"), (9, "Сентябрь"),
+            (10, "Октябрь"), (11, "Ноябрь"), (12, "Декабрь"),
+        ],
+    )
+
+    class Meta:
+        model = Schedule
+        fields = ["year", "month"]
+
+    def clean_year(self):
+        year = self.cleaned_data.get("year")
+
+        if not re.match(r"^\d{4}$", year):
+            raise ValidationError("Введи корректный код (всего лишь нужно 4 цифры подряд)")
+
+        return year
+
+
+class ShiftForm(forms.ModelForm):
+    class Meta:
+        model = Shift
+        fields = ["morning_needed", "day_needed", "night_needed"]
