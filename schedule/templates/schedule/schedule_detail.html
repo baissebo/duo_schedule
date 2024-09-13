@@ -6,26 +6,17 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <p class="card-text">Email: {{ client.email }}</p>
-                        <p class="card-text">Рассылки №:
-                            {{ client.mailing_set.all|map:"create_link:mailings:mailing_detail,pk,"|join_by_comma|safe }}
+                        <p class="card-text">{{ schedule.year }}</p>
+                        <p class="card-text">{{ schedule.month }}
                         </p>
-                        {% if client.comment %}
-                        <p class="card-text">Комментарий: {{ client.comment }}</p>
-                        {% endif %}
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                {% if perms.mailings.can_disable_mailing %}
-                                <a href="{% url 'mailings:client_list' %}"
-                                   class="btn btn btn-secondary rounded me-1">Назад</a>
-                                {% else %}
-                                <a href="{% url 'mailings:client_update' object.pk %}"
+                                <a href="{% url 'schedule:schedule-update' object.pk %}"
                                    class="btn btn-sm btn-light rounded me-1">Редактировать</a>
-                                <a href="{% url 'mailings:client_delete' object.pk %}"
+                                <a href="{% url 'schedule:schedule-delete' object.pk %}"
                                    class="btn btn-sm btn-danger rounded me-1">Удалить</a>
-                                <a href="{% url 'mailings:client_list' %}"
+                                <a href="{% url 'schedule:schedule-list' %}"
                                    class="btn btn-sm btn-secondary rounded me-1">Назад</a>
-                                {% endif %}
                             </div>
                         </div>
                     </div>

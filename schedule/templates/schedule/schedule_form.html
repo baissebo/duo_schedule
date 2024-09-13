@@ -9,6 +9,16 @@
         <form method="post">
             {% csrf_token %}
             <div class="card-body">
+                {% if form.year.errors %}
+                <div class="alert alert-danger">
+                    {{ form.year.errors }}
+                </div>
+                {% endif %}
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
                 <div class="form-group mb-3">
                     <label for="id_year">Год:</label>
                     {{ form.year }}

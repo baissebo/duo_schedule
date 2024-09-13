@@ -41,7 +41,7 @@ class ScheduleCreateView(CreateView):
         year = int(year)
         month = int(month)
 
-        schedule_date = datetime(year, month, 1)
+        schedule_date = datetime(year, month, 1).date()
 
         schedule = form.save(commit=False)
         schedule.date = schedule_date

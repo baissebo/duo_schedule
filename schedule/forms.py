@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -66,10 +67,23 @@ class ScheduleForm(forms.ModelForm):
 
         if not re.match(r"^\d{4}$", year):
             raise ValidationError(
-                "Введи корректный код (всего лишь нужно 4 цифры подряд)"
+                "Введи корректный год (всего лишь нужно 4 цифры подряд)"
             )
 
         return year
+
+    def clean(self):
+        cleaned_data = super().clean()
+        year = cleaned_data.get("year")
+        month = cleaned_data.get("month")
+
+        if year is not None and month is not None:
+            date_to_check = datetime(year=int(year), month=int(month), day=1)
+
+            if Schedule.objects.filter(date=date_to_check).exists():
+                raise ValidationError("Такой график уже существует!")
+
+        return cleaned_data
 
 
 class ShiftForm(forms.ModelForm):
