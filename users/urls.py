@@ -2,8 +2,14 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
 from users.apps import UsersConfig
-from users.views import email_verification, UserCreateView, UserListView, UserProfileView, UserUpdateView, \
-    UserDeleteView
+from users.views import (
+    email_verification,
+    UserCreateView,
+    UserListView,
+    UserProfileView,
+    UserUpdateView,
+    UserDeleteView,
+)
 
 app_name = UsersConfig.name
 
@@ -16,5 +22,4 @@ urlpatterns = [
     path("profile/", UserProfileView.as_view(), name="profile"),
     path("profile-edit/", UserUpdateView.as_view(), name="profile-edit"),
     path("profile/<int:pk>/delete", UserDeleteView.as_view(), name="profile-delete"),
-
 ]

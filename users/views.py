@@ -6,7 +6,13 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.utils.html import strip_tags
-from django.views.generic import CreateView, ListView, UpdateView, DetailView, DeleteView
+from django.views.generic import (
+    CreateView,
+    ListView,
+    UpdateView,
+    DetailView,
+    DeleteView,
+)
 
 from config.settings import EMAIL_HOST_USER
 from users.forms import UserRegisterForm, UserUpdateForm
@@ -43,10 +49,13 @@ class UserCreateView(CreateView):
         url = f"http://{host}/users/email-confirm/{token}/"
 
         subject = "Подтверждение почты"
-        html_message = render_to_string("users/email_confirm.html", {
-            "user": user,
-            "url": url,
-        })
+        html_message = render_to_string(
+            "users/email_confirm.html",
+            {
+                "user": user,
+                "url": url,
+            },
+        )
         plain_message = strip_tags(html_message)
 
         send_mail(

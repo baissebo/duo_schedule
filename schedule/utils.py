@@ -4,12 +4,16 @@ from schedule.models import Shift
 
 
 def shift_restrictions(employee, target_date):
-    shifts = Shift.objects.filter(assigned_employee=employee, date__gte=target_date - timedelta(days=3))
+    shifts = Shift.objects.filter(
+        assigned_employee=employee, date__gte=target_date - timedelta(days=3)
+    )
 
     if shifts.count() >= 4:
         return False
 
-    if shifts.filter(date=target_date - timedelta(days=1), shift_preference="night").exists():
+    if shifts.filter(
+        date=target_date - timedelta(days=1), shift_preference="night"
+    ).exists():
         if shifts.filter(date=target_date, shift_preference="morning").exists():
             return False
 
@@ -21,11 +25,7 @@ def assign_employees(shift, wishes):
     day_needed = shift.day_needed
     night_needed = shift.night_needed
 
-    assigned = {
-        "morning": [],
-        "day": [],
-        "night": []
-    }
+    assigned = {"morning": [], "day": [], "night": []}
 
     for wish in wishes:
         if shift_restrictions(wish.employee, shift.date):

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container marketing" style="margin-top: 10rem;">
+    <form method="get" class="mb-4">
+        <div class="col text-center">
+            <a href="{% url 'schedule:shift-create' %}" class="btn btn-lg"
+               style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">Добавить новую смену</a>
+        </div>
+
+        <div class="form-row justify-content-between align-items-center">
+            <div class="form-group col-sm-3">
+                <label for="sort-by">Сортировать по:</label>
+                <select class="form-control" id="sort-by" name="sort_by">
+                    <option value="-date">Убыванию</option>
+                    <option value="date">Возрастанию</option>
+                </select>
+            </div>
+
+            <div class="form-group col-sm-3">
+                {{ form.year.label_tag }}<br/>
+                {{ form.year }}
+            </div>
+
+            <div class="form-group col-sm-3">
+                {{ form.month.label_tag }}<br/>
+                {{ form.month }}
+            </div>
+
+            <div class="form-group col-sm-3">
+                <button type="submit" class="btn btn-sm btn-secondary mt-2">Применить</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% if object_list %}
+        {% for shift in object_list %}
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="card-text">{{ shift.date|date:"l, j F Y" }}</p>
+                    <p class="text-primary"><strong>Утро: {{ shift.morning_needed }}</strong></p>
+                    <p class="text-secondary"><strong>День: {{ shift.day_needed }}</strong></p>
+                    <p class="text-warning"><strong>Ночь: {{ shift.night_needed }}</strong></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-secondary rounded me-1"
+                               href="{% url 'schedule:shift-detail' shift.pk %}"
+                               role="button">Посмотреть</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <p class="lead"><strong>Нет смен для отображения</strong></p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

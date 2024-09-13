@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center pt-5">
+        <div class="col-md-5">
+            <div class="pt-5"></div>
+            <div class="card shadow-sm mb-5">
+                <div class="card-body">
+                    <p class="card-text">{{ shift.date|date:"l, j F Y" }}</p>
+                    <p class="text-primary"><strong>Утро: {{ shift.morning_needed }}</strong></p>
+                    <p class="text-secondary"><strong>День: {{ shift.day_needed }}</strong></p>
+                    <p class="text-warning"><strong>Ночь: {{ shift.night_needed }}</strong></p>
+                    <p class="card-text"><strong>Назначенные сотрудники:</strong></p>
+                    {% if shift.assigned_employees.all %}
+                    <ul>
+                        {% for employee in shift.assigned_employees.all %}
+                        <li>{{ employee.get_full_name }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>Нет назначенных сотрудников</p>
+                    {% endif %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a href="{% url 'schedule:shift-update' shift.pk %}"
+                               class="btn btn-sm btn-light rounded me-1">Редактировать</a>
+                            <a href="{% url 'schedule:shift-delete' shift.pk %}"
+                               class="btn btn-sm btn-danger rounded me-1">Удалить</a>
+                            <a href="{% url 'schedule:shift-list' %}"
+                               class="btn btn-sm btn-secondary rounded me-1">Назад</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

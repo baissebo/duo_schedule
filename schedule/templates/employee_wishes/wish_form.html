@@ -12,7 +12,9 @@
             {% else %}
             <h3 class="card-title">Внести изменения</h3>
     </div>
-    <strong class="ms-3">Текущая дата:</strong> {{ form.date.value }}
+    <div class="form-group mb-1">
+        <small class="form-text text-muted">Текущая дата: {{ form.date.value }}</small>
+    </div>
     {% endif %}
     <div class="card-body">
         {% for field in form %}

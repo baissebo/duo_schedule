@@ -3,7 +3,13 @@ from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 
 from schedule.forms import EmployeeWishForm, ScheduleForm, ShiftForm
 from schedule.models import Schedule, Shift, EmployeeWish
@@ -47,37 +53,98 @@ class ScheduleCreateView(CreateView):
 class ShiftListView(LoginRequiredMixin, ListView):
     model = Shift
     paginate_by = 31
+    template_name = "shifts/shift_list.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        selected_month = self.request.GET.get("month")
+        selected_year = self.request.GET.get("year")
+
+        if selected_month and selected_year:
+            queryset = queryset.filter(
+                date__year=int(selected_year), date__month=selected_month
+            )
+
+        sort_by = self.request.GET.get("sort_by", "-date")
+        return queryset.order_by(sort_by)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = ScheduleForm()
+        return context
 
 
 class ShiftDetailView(LoginRequiredMixin, DetailView):
     model = Shift
+    template_name = "shifts/shift_detail.html"
 
 
 class ShiftCreateView(LoginRequiredMixin, CreateView):
     model = Shift
-    template_name = "schedule/shift_form.html"
+    template_name = "shifts/shift_form.html"
     form_class = ShiftForm
+    success_url = reverse_lazy("schedule:shift-list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        schedule_id = self.kwargs.get("schedule_id")
-        context["schedule"] = Schedule.objects.get(id=schedule_id)
+
+        schedules = Schedule.objects.all()
+
+        month_names = ScheduleForm.base_fields["month"].choices
+
+        context["schedules"] = [
+            {
+                "id": schedule.id,
+                "display": f"{schedule.date.year} - {dict(month_names)[schedule.date.month]}",
+            }
+            for schedule in schedules
+        ]
+
         return context
 
     def form_valid(self, form):
-        schedule = Schedule.objects.get(id=self.kwargs["schedule_id"])
-        form.instance.schedule = schedule
-        shift = form.save()
+        shift = form.save(commit=False)
+        schedule_id = self.request.POST.get("schedule")
+        shift.schedule = Schedule.objects.get(id=schedule_id)
+        shift.save()
 
-        wishes = EmployeeWish.objects.filter(date=shift.date).order_by("created_at")
+        return redirect(self.success_url)
 
-        assign_employees(shift, wishes)
 
-        return super().form_valid(form)
+class ShiftUpdateView(LoginRequiredMixin, UpdateView):
+    model = Shift
+    form_class = ShiftForm
+    template_name = "shifts/shift_form.html"
 
-    def get_success_url(self):
-        schedule_id = self.kwargs.get("schedule_id")
-        return reverse_lazy("schedule:schedule-detail", kwargs={"pk": schedule_id})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        schedules = Schedule.objects.all()
+        month_names = ScheduleForm.base_fields["month"].choices
+
+        context["schedules"] = [
+            {
+                "id": schedule.id,
+                "display": f"{schedule.date.year} - {dict(month_names)[schedule.date.month]}",
+            }
+            for schedule in schedules
+        ]
+
+        return context
+
+    def form_valid(self, form):
+        shift = form.save(commit=False)
+        shift.schedule = form.cleaned_data.get("schedule")
+        shift.save()
+
+        return redirect("schedule:shift-detail", pk=shift.pk)
+
+
+class ShiftDeleteView(LoginRequiredMixin, DeleteView):
+    model = Shift
+    template_name = "shifts/shift_confirm_delete.html"
+    success_url = reverse_lazy("schedule:shift-list")
 
 
 class EmployeeWishListView(LoginRequiredMixin, ListView):
