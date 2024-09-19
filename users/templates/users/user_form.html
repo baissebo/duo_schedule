@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    .text-error {
+        color: red;
+    }
+</style>
+
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="card w-50">
         <form method="post" enctype="multipart/form-data">
@@ -14,19 +20,41 @@
                 </div>
                 <div class="card-body">
                     {% csrf_token %}
-                    {{ form.as_p }}
+
+                    {% for field in form %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <div class="text-error">{{ error|escape }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    {% if form.non_field_errors %}
+                        <div class="text-error">
+                            {% for error in form.non_field_errors %}
+                                {{ error|escape }}<br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="card-footer">
                     {% if request.resolver_match.url_name == 'register' %}
-                    <button type="submit" class="btn btn-light">Зарегистрироваться</button>
-                    <a href="{% url 'users:login' %}" class="btn btn-secondary">Назад </a>
+                    <button type="submit" class="btn btn-light w-50">Зарегистрироваться</button>
+                    <a href="{% url 'users:login' %}" class="btn btn-secondary w-25">Назад </a>
                     {% else %}
-                    <button type="submit" class="btn btn-light">Редактировать</button>
-                    <a href="{% url 'users:profile' %}" class="btn btn-secondary">Назад</a>
+                    <button type="submit" class="btn btn-light w-50">Редактировать</button>
+                    <a href="{% url 'users:profile' %}" class="btn btn-secondary w-25">Назад</a>
                     {% endif %}
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 {% endblock %}

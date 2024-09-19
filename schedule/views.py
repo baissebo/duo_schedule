@@ -25,7 +25,7 @@ class ScheduleDetailView(LoginRequiredMixin, DetailView):
     model = Schedule
 
 
-class ScheduleCreateView(CreateView):
+class ScheduleCreateView(LoginRequiredMixin, CreateView):
     model = Schedule
     template_name = "schedule/schedule_form.html"
     form_class = ScheduleForm

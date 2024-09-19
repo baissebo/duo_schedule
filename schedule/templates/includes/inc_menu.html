@@ -13,13 +13,23 @@
                                     data-bs-toggle="collapse"
                                     aria-expanded="false" data-bs-target="#contents-collapse"
                                     aria-controls="contents-collapse">
-                                <span>Мой профиль</span>
+                                <span>Учётная запись</span>
                             </button>
                             <ul class="list-unstyled ps-3 collapse" id="contents-collapse">
+                                {% if user.is_authenticated %}
                                 <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
-                                       href="">Редактировать</a></li>
-                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none" href="">Удалить</a>
+                                       href="{% url 'users:logout' %}">Выйти</a></li>
+                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
+                                       href="{% url 'users:profile' %}">Открыть профиль</a>
                                 </li>
+                                {% else %}
+                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
+                                       href="{% url 'users:login' %}">Войти</a>
+                                </li>
+                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
+                                       href="{% url 'users:register' %}">Регистрация</a>
+                                </li>
+                                {% endif %}
                             </ul>
                         </li>
                         <li class="my-2">
@@ -29,9 +39,11 @@
                                     aria-controls="forms-collapse">Чаевые
                             </button>
                             <ul class="list-unstyled ps-3 collapse" id="forms-collapse">
-                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none" href="">Открыть
+                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
+                                       href="">Открыть
                                     новый день</a></li>
-                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none" href="">Посмотреть
+                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
+                                       href="">Посмотреть
                                     свои чаевые</a></li>
                             </ul>
                         </li>
@@ -46,9 +58,11 @@
                                 <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
                                        href="{% url 'schedule:wish-list' %}"
                                 >Мои пожелания</a></li>
-                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none" href="{% url 'schedule:schedule-create' %}">
+                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
+                                       href="{% url 'schedule:schedule-create' %}">
                                     Создать новый график</a></li>
-                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none" href="{% url 'schedule:shift-list' %}">
+                                <li><a class="d-inline-flex align-items-center rounded text-decoration-none"
+                                       href="{% url 'schedule:shift-list' %}">
                                     Список смен</a></li>
                             </ul>
                         </li>

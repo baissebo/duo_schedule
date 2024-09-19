@@ -9,6 +9,7 @@ from users.views import (
     UserProfileView,
     UserUpdateView,
     UserDeleteView,
+    NewPasswordView,
 )
 
 app_name = UsersConfig.name
@@ -18,6 +19,7 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(), name="logout"),
     path("register/", UserCreateView.as_view(), name="register"),
     path("email-confirm/<str:token>/", email_verification, name="email-confirm"),
+    path("new-password/", NewPasswordView.as_view(), name="new_password"),
     path("user-list/", UserListView.as_view(), name="user-list"),
     path("profile/", UserProfileView.as_view(), name="profile"),
     path("profile-edit/", UserUpdateView.as_view(), name="profile-edit"),

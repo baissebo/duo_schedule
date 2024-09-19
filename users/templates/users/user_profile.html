@@ -10,29 +10,55 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <p><strong>Имя:</strong> {{ user.first_name }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <p><strong>Email:</strong> {{ user.email }}</p>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <p><strong>Телефон:</strong> {{ user.phone }}</p>
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <p><strong>Имя:</strong> {{ user.first_name }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <p><strong>Email:</strong> {{ user.email }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                {% if user.phone %}
+                                <div class="col-md-12">
+                                    <p><strong>Телефон:</strong> {{ user.phone }}</p>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <a href="{% url 'users:profile_edit' %}" class="btn btn-light ">Редактировать профиль</a>
-                            <a href="{% url 'users:profile_delete' user.pk %}" class="btn btn-danger w-50 text-black">Удалить
-                                профиль</a>
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                {% if user.job_title %}
+                                <div class="col-md-12">
+                                    <p><strong>Должность:</strong> {{ user.job_title }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="row mb-3">
+                                {% if user.avatar %}
+                                <div class="col-md-12">
+                                    <p><strong>Аватар:</strong></p>
+                                    <img src="{{ user.avatar.url }}" alt="Аватар" class="img-fluid" style="max-width: 150px;">
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <a href="{% url 'users:profile-edit' %}" class="btn btn-light">Редактировать профиль</a>
+                    <a href="{% url 'users:profile-delete' user.pk %}" class="btn btn-danger text-black">Удалить профиль</a>
+                </div>
             </div>
         </div>
-        {% endblock %}
+    </div>
+</div>
+{% endblock %}

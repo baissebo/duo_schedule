@@ -1,6 +1,9 @@
 import secrets
 
+from django.contrib import messages
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -50,7 +53,7 @@ class UserCreateView(CreateView):
 
         subject = "Подтверждение почты"
         html_message = render_to_string(
-            "users/email_confirm.html",
+            "email_confirm.html",
             {
                 "user": user,
                 "url": url,
@@ -68,9 +71,10 @@ class UserCreateView(CreateView):
         return super().form_valid(form)
 
 
-def email_verification(token):
+def email_verification(request, token):
     user = get_object_or_404(User, token=token)
     user.is_active = True
+    user.token = ""
     user.save()
     return redirect(reverse("users:login"))
 
@@ -90,3 +94,37 @@ class UserDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("users:logout")
     slug_field = "email"
     slug_url_kwarg = "email"
+
+
+class NewPasswordView(PasswordResetView):
+    form_class = PasswordResetForm
+    template_name = "users/new_password.html"
+    success_url = reverse_lazy("users:login")
+
+    def form_valid(self, form):
+        email = form.cleaned_data["email"]
+        try:
+            user = User.objects.get(email=email)
+            password = secrets.token_urlsafe(10)
+
+            message = render_to_string("password_reset_email.html", {
+                "user": user,
+                "new_password": password,
+            })
+
+            send_mail(
+                subject="Новый пароль для вашего аккаунта",
+                message=message,
+                from_email=EMAIL_HOST_USER,
+                recipient_list=[user.email],
+                html_message=message,
+                fail_silently=False,
+            )
+
+            user.set_password(password)
+            user.save()
+            messages.success(self.request, "Новый пароль отправлен на электронную почту")
+            return redirect(self.success_url)
+        except User.DoesNotExist:
+            messages.error(self.request, "Пользователь с таким email не найден")
+            return super().form_invalid(form)
