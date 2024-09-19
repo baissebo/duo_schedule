@@ -49,6 +49,7 @@
         <div class="col">
             <div class="card shadow-sm">
                 <div class="card-body">
+                    <p class="card-text" style="color:purple;"><strong>{{ employeewish.employee.last_name }} {{employeewish.employee.first_name}}</strong></p>
                     {% with date=employeewish.date %}
                     <p class="card-text">{{ date|date:"l, j F Y" }}</p>
                     {% endwith %}
