@@ -63,7 +63,7 @@
                     <p class="card-text"><strong>{{ employeewish.get_shift_preference_display }}</strong></p>
                     {% endif %}
                     {% if employeewish.comment %}
-                    <p class="card-text">Комментарий: {{employeewish.comment }}</p>
+                    <p class="card-text">Комментарий: {{employeewish.comment|truncatechars:50 }}</p>
                     {% endif %}
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">

@@ -1,7 +1,9 @@
 from datetime import datetime
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -88,18 +90,9 @@ class ShiftCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         schedules = Schedule.objects.all()
 
-        month_names = ScheduleForm.base_fields["month"].choices
-
-        context["schedules"] = [
-            {
-                "id": schedule.id,
-                "display": f"{schedule.date.year} - {dict(month_names)[schedule.date.month]}",
-            }
-            for schedule in schedules
-        ]
+        context["schedules"] = schedules
 
         return context
 
@@ -119,17 +112,11 @@ class ShiftUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         schedules = Schedule.objects.all()
-        month_names = ScheduleForm.base_fields["month"].choices
 
-        context["schedules"] = [
-            {
-                "id": schedule.id,
-                "display": f"{schedule.date.year} - {dict(month_names)[schedule.date.month]}",
-            }
-            for schedule in schedules
-        ]
+        context["schedules"] = schedules
+
+        context["object"] = self.object
 
         return context
 
@@ -149,7 +136,7 @@ class ShiftDeleteView(LoginRequiredMixin, DeleteView):
 
 class EmployeeWishListView(LoginRequiredMixin, ListView):
     model = EmployeeWish
-    paginate_by = 10
+    paginate_by = 12
     template_name = "employee_wishes/wish_list.html"
 
     def get_queryset(self):

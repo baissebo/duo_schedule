@@ -23,8 +23,10 @@ class EmployeeWishForm(forms.ModelForm):
         date = cleaned_data.get("date")
         shift_preference = cleaned_data.get("shift_preference")
 
+        current_instance = self.instance
+
         if date and shift_preference and self.user:
-            if EmployeeWish.objects.filter(
+            if EmployeeWish.objects.exclude(pk=current_instance.pk).filter(
                     employee=self.user, date=date, shift_preference=shift_preference
             ).exists():
                 raise forms.ValidationError(
@@ -99,6 +101,9 @@ class ShiftForm(forms.ModelForm):
         shift_id = self.instance.id if self.instance.pk else None
 
         if schedule and date:
+            if schedule.date.year != date.year or schedule.date.month != date.month:
+                raise ValidationError("Выбранный график не соответствует дате смены!")
+
             if Shift.objects.filter(schedule=schedule, date=date).exclude(id=shift_id).exists():
                 raise ValidationError("Смена на эту дату для данного графика уже существует!")
 

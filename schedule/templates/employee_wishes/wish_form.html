@@ -2,55 +2,56 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card w-50">
+    <div class="card" style="width: 100%; max-width: 400px;">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="card-header">
-                {% if not object %}
-                <h3 class="card-title">Создать пожелание</h3>
+                <h3 class="card-title text-center">{% if not object %}Создать пожелание{% else %}Внести изменения{% endif %}</h3>
             </div>
-            {% else %}
-            <h3 class="card-title">Внести изменения</h3>
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <label for="date">Дата:</label>
+                    <input type="date" name="date" id="date" class="form-control w-100" required
+                           value="{{ object.date|date:'Y-m-d' }}">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="shift_preference">Предпочтительный тип смены:</label>
+                    <select name="shift_preference" id="shift_preference" class="form-control" required>
+                        {% for choice in form.shift_preference.field.choices %}
+                            <option value="{{ choice.0 }}" {% if object and object.shift_preference == choice.0 %} selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="id_comment">Комментарий:</label>
+                    <textarea id="id_comment" name="comment" class="form-control">{{ object.comment }}</textarea>
+                    {% for error in form.comment.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% for error in form.non_field_errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                {% if not object %}
+                    <button type="submit" class="btn btn-primary w-50 me-1"
+                            style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
+                        Создать
+                    </button>
+                    <a class="btn btn-secondary w-50" href="{% url 'schedule:wish-list' %}" role="button">Назад</a>
+                {% else %}
+                    <button type="submit" class="btn btn-primary w-50 me-1"
+                            style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
+                        Изменить
+                    </button>
+                    <a class="btn btn-secondary w-50" href="{% url 'schedule:wish-detail' employeewish.pk %}"
+                       role="button">Назад</a>
+                {% endif %}
+            </div>
+        </form>
     </div>
-    <div class="form-group mb-1">
-        <small class="form-text text-muted">Текущая дата: {{ form.date.value }}</small>
-    </div>
-    {% endif %}
-    <div class="card-body">
-        {% for field in form %}
-        <div class="form-group mb-3">
-            {{ field.label_tag }}
-            {{ field }}
-            {% if field.help_text %}
-            <small class="form-text text-muted">{{ field.help_text }}</small>
-            {% endif %}
-            {% for error in field.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-        <div class="text-danger">{{ error }}</div>
-        {% endfor %}
-    </div>
-    <div class="card-footer d-flex justify-content-end">
-        {% if not object %}
-        <button type="submit" class="btn w-100 me-1"
-                style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
-            Создать
-        </button>
-        <a class="btn btn-secondary w-100" href="{% url 'schedule:wish-list' %}"
-           role="button">Назад</a>
-        {% else %}
-        <button type="submit" class="btn w-100 me-1"
-                style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
-            Изменить
-        </button>
-        <a class="btn btn-secondary w-100" href="{% url 'schedule:wish-detail' employeewish.pk %}"
-           role="button">Назад</a>
-        {% endif %}
-    </div>
-    </form>
-</div>
 </div>
 {% endblock %}

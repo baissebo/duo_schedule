@@ -13,25 +13,17 @@
                     <label for="schedule">Выберите график:</label>
                     <select name="schedule" id="schedule" class="form-control w-100" required>
                         {% for schedule in schedules %}
-                        <option value="{{ schedule.id }}" {% if schedule.id == form.schedule.value %}selected{% endif %}>
-                            {{ schedule.display }}
+                        <option value="{{ schedule.id }}" {% if schedule.id == object.schedule.id %}selected{% endif %}>
+                            {{ schedule.date.year }} {{ schedule.date|date:"F" }}
                         </option>
                         {% endfor %}
                     </select>
                 </div>
-
-                {% if object %}
-                <div class="form-group mb-1">
-                    <small class="form-text text-muted">Текущая дата: {{ form.date.value }}</small>
-                </div>
-                {% endif %}
-
                 <div class="form-group mb-3">
                     <label for="date">Дата:</label>
                     <input type="date" name="date" id="date" class="form-control w-100" required
-                           value="{{ form.date.value }}">
+                           value="{{ object.date|date:'Y-m-d' }}">
                 </div>
-
                 <h5>Тип смены и количество сотрудников:</h5>
                 <div class="shift-options">
                     <div class="form-group mb-3">
@@ -56,11 +48,21 @@
                 {% endfor %}
             </div>
             <div class="card-footer d-flex justify-content-end">
+                {% if not object %}
                 <button type="submit" class="btn w-100 me-1"
                         style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
-                    {% if not object %}Создать{% else %}Изменить{% endif %}
+                    Создать
                 </button>
-                <a class="btn btn-secondary w-100" href="{% url 'schedule:shift-list' %}" role="button">Назад</a>
+                <a class="btn btn-secondary w-100" href="{% url 'schedule:shift-list' %}"
+                   role="button">Назад</a>
+                {% else %}
+                <button type="submit" class="btn w-100 me-1"
+                        style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">
+                    Изменить
+                </button>
+                <a class="btn btn-secondary w-100" href="{% url 'schedule:shift-detail' shift.pk %}"
+                   role="button">Назад</a>
+                {% endif %}
             </div>
         </form>
     </div>
