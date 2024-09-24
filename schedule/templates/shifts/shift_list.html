@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <div class="container marketing" style="margin-top: 10rem;">
     <form method="get" class="mb-4">
@@ -7,7 +6,10 @@
             <a href="{% url 'schedule:shift-create' %}" class="btn btn-lg"
                style="background-image: linear-gradient(to right, #9b59b6, #2980b9);">Добавить новую смену</a>
         </div>
-
+        <div class="col text-center mt-2">
+            <a href="{% url 'schedule:vacation-create' %}" class="btn btn-danger"
+               style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Сформировать отпуска</a>
+        </div>
         <div class="form-row justify-content-between align-items-center">
             <div class="form-group col-sm-3">
                 <label for="sort-by">Сортировать по:</label>
@@ -28,12 +30,37 @@
             </div>
 
             <div class="form-group col-sm-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="show-vacations" name="show_vacations" checked>
+                    <label class="form-check-label" for="show-vacations">
+                        Показать отпуска
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-3">
                 <button type="submit" class="btn btn-sm btn-secondary mt-2">Применить</button>
             </div>
         </div>
     </form>
 
+    {% if vacations %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for vacation in vacations %}
+        <div class="col">
+            <div class="card shadow-sm" style="background-color: #dc3545;">
+                <div class="card-body">
+                    <p class="card-text"><strong>Сотрудник:</strong> {{ vacation.employee.first_name }} {{ vacation.employee.last_name }}</p>
+                    <p class="card-text"><strong>Начало отпуска:</strong> {{ vacation.start_date|date:"d F Y" }}</p>
+                    <p class="card-text"><strong>Конец отпуска:</strong> {{ vacation.end_date|date:"d F Y" }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-2">
         {% if object_list %}
         {% for shift in object_list %}
         <div class="col">
@@ -54,16 +81,17 @@
             </div>
         </div>
         {% endfor %}
-        {% else %}
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col text-center">
-                    <p class="lead"><strong>Нет смен для отображения</strong></p>
-                </div>
-            </div>
-        </div>
         {% endif %}
     </div>
+
+    {% if not object_list and not vacations %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col text-center">
+                <p class="lead"><strong>Нет данных для отображения</strong></p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
-

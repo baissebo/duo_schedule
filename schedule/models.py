@@ -62,3 +62,21 @@ class Shift(models.Model):
         verbose_name = "Смена"
         verbose_name_plural = "Смены"
         ordering = ["-date"]
+
+
+class Vacation(models.Model):
+    schedule = models.ForeignKey(
+        Schedule, on_delete=models.CASCADE, verbose_name="График")
+    employee = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Сотрудник"
+    )
+    start_date = models.DateField(verbose_name="Дата начала отпуска")
+    end_date = models.DateField(verbose_name="Дата окончания отпуска")
+
+    def __str__(self):
+        return f"{self.employee} - отпуск с {self.start_date} по {self.end_date}"
+
+    class Meta:
+        verbose_name = "Отпуск"
+        verbose_name_plural = "Отпуска"
+        ordering = ["employee", "start_date"]

@@ -5,7 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import DateInput
 
-from schedule.models import Schedule, Shift, EmployeeWish
+from schedule.models import Schedule, Shift, EmployeeWish, Vacation
 
 
 class EmployeeWishForm(forms.ModelForm):
@@ -106,5 +106,31 @@ class ShiftForm(forms.ModelForm):
 
             if Shift.objects.filter(schedule=schedule, date=date).exclude(id=shift_id).exists():
                 raise ValidationError("Смена на эту дату для данного графика уже существует!")
+
+        return cleaned_data
+
+
+class VacationForm(forms.ModelForm):
+    class Meta:
+        model = Vacation
+        fields = ["schedule", "employee", "start_date", "end_date"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        schedule = cleaned_data.get("schedule")
+        employee = cleaned_data.get("employee")
+        start_date = cleaned_data.get("start_date")
+        end_date = cleaned_data.get("end_date")
+
+        if schedule and employee and start_date and end_date:
+            if schedule.date.year != start_date.year or schedule.date.month != start_date.month:
+                raise ValidationError("Выбранный график не соответствует дате начала отпуска!")
+
+            if Vacation.objects.filter(schedule=schedule, employee=employee, start_date__lte=end_date,
+                                       end_date__gte=start_date).exists():
+                raise ValidationError("Сотрудник уже имеет отпуск в этот период!")
+
+            if start_date > end_date:
+                raise ValidationError("Дата начала отпуска не может быть позже даты окончания!")
 
         return cleaned_data

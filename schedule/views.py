@@ -13,13 +13,15 @@ from django.views.generic import (
     DeleteView,
 )
 
-from schedule.forms import EmployeeWishForm, ScheduleForm, ShiftForm
-from schedule.models import Schedule, Shift, EmployeeWish
+from schedule.forms import EmployeeWishForm, ScheduleForm, ShiftForm, VacationForm
+from schedule.models import Schedule, Shift, EmployeeWish, Vacation
 from schedule.utils import assign_employees
+from users.models import User
 
 
 class ScheduleListView(LoginRequiredMixin, ListView):
     model = Schedule
+    template_name = "schedule/schedule_list.html"
     paginate_by = 1
 
 
@@ -54,11 +56,11 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
 
 class ShiftListView(LoginRequiredMixin, ListView):
     model = Shift
-    paginate_by = 31
+    paginate_by = 12
     template_name = "shifts/shift_list.html"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().select_related("schedule")
 
         selected_month = self.request.GET.get("month")
         selected_year = self.request.GET.get("year")
@@ -74,6 +76,18 @@ class ShiftListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = ScheduleForm()
+
+        selected_month = self.request.GET.get("month")
+        selected_year = self.request.GET.get("year")
+
+        if selected_month and selected_year:
+            context["vacations"] = Vacation.objects.filter(
+                start_date__month=selected_month,
+                start_date__year=int(selected_year)
+            )
+        else:
+            context["vacations"] = []
+
         return context
 
 
@@ -202,3 +216,23 @@ class EmployeeWishDeleteView(LoginRequiredMixin, DeleteView):
     model = EmployeeWish
     template_name = "employee_wishes/wish_confirm_delete.html"
     success_url = reverse_lazy("schedule:wish-list")
+
+
+@login_required
+def vacation_create(request):
+    if request.method == "POST":
+        form = VacationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("schedule:shift-list")
+    else:
+        form = VacationForm()
+
+    schedules = Schedule.objects.all()
+    employees = User.objects.all()
+
+    return render(request, "vacation_form.html", {
+        "form": form,
+        "schedules": schedules,
+        "employees": employees,
+    })

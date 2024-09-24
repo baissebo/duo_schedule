@@ -17,11 +17,14 @@ from schedule.views import (
     ShiftDetailView,
     ShiftUpdateView,
     ShiftDeleteView,
+    vacation_create,
 )
 
 app_name = ScheduleConfig.name
 
 urlpatterns = [
+    path("vacation-create/", vacation_create, name="vacation-create"),
+
     path("schedule-list/", ScheduleListView.as_view(), name="schedule-list"),
     path("schedule/<int:pk>/", ScheduleDetailView.as_view(), name="schedule-detail"),
     path("schedule-create/", ScheduleCreateView.as_view(), name="schedule-create"),
