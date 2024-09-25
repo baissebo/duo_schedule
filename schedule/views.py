@@ -1,3 +1,4 @@
+import calendar
 from datetime import datetime
 
 from django.contrib import messages
@@ -51,6 +52,28 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
         schedule.date = schedule_date
         schedule.save()
 
+        num_days = calendar.monthrange(year, month)[1]
+
+        if month in [5, 6, 7, 8, 9]:
+            morning_needed = 3
+            day_needed = 5
+            night_needed = 3
+        else:
+            morning_needed = 2
+            day_needed = 5
+            night_needed = 2
+
+        for day in range(1, num_days + 1):
+            shift_date = datetime(year, month, day).date()
+            shift = Shift(
+                schedule=schedule,
+                date=shift_date,
+                morning_needed=morning_needed,
+                day_needed=day_needed,
+                night_needed=night_needed
+            )
+            shift.save()
+
         return redirect(reverse_lazy("schedule:schedule-list"))
 
 
@@ -79,8 +102,12 @@ class ShiftListView(LoginRequiredMixin, ListView):
 
         selected_month = self.request.GET.get("month")
         selected_year = self.request.GET.get("year")
+        show_vacations = self.request.GET.get("show_vacations")
 
-        if selected_month and selected_year:
+        context["selected_month"] = selected_month
+        context["selected_year"] = selected_year
+
+        if selected_month and selected_year and show_vacations:
             context["vacations"] = Vacation.objects.filter(
                 start_date__month=selected_month,
                 start_date__year=int(selected_year)

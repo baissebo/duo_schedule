@@ -14,24 +14,28 @@
             <div class="form-group col-sm-3">
                 <label for="sort-by">Сортировать по:</label>
                 <select class="form-control" id="sort-by" name="sort_by">
-                    <option value="-date">Убыванию</option>
-                    <option value="date">Возрастанию</option>
+                    <option value="-date" {% if request.GET.sort_by == "-date" %}selected{% endif %}>Убыванию</option>
+                    <option value="date" {% if request.GET.sort_by == "date" %}selected{% endif %}>Возрастанию</option>
                 </select>
             </div>
 
             <div class="form-group col-sm-3">
-                {{ form.year.label_tag }}<br/>
-                {{ form.year }}
+                <label for="year">Год:</label>
+                <input type="number" class="form-control" name="year" value="{{ selected_year }}" placeholder="Введите год" min="2000" max="2100" required />
             </div>
 
             <div class="form-group col-sm-3">
-                {{ form.month.label_tag }}<br/>
-                {{ form.month }}
+                <label for="month">Месяц:</label>
+                <select class="form-control" name="month">
+                    {% for month in form.month.field.choices %}
+                        <option value="{{ month.0 }}" {% if month.0|stringformat:"s" == selected_month %}selected{% endif %}>{{ month.1 }}</option>
+                    {% endfor %}
+                </select>
             </div>
 
             <div class="form-group col-sm-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="show-vacations" name="show_vacations" checked>
+                    <input class="form-check-input" type="checkbox" id="show-vacations" name="show_vacations" {% if request.GET.show_vacations %}checked{% endif %}>
                     <label class="form-check-label" for="show-vacations">
                         Показать отпуска
                     </label>
