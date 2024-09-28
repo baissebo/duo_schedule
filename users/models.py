@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+from email_user_manager import EmailUserManager
 from nullable import NULLABLE
 
 
@@ -25,6 +26,8 @@ class User(AbstractUser):
         help_text="Загрузите изображение",
     )
     token = models.CharField(max_length=100, verbose_name="Token", **NULLABLE)
+
+    objects = EmailUserManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

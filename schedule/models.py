@@ -30,6 +30,7 @@ class EmployeeWish(models.Model):
 
 class Schedule(models.Model):
     date = models.DateField(verbose_name="Дата")
+    is_calculated = models.BooleanField(default=False, **NULLABLE, verbose_name="График рассчитан")
 
     class Meta:
         verbose_name = "График работы"
@@ -50,9 +51,6 @@ class Shift(models.Model):
     )
     night_needed = models.PositiveIntegerField(
         default=0, verbose_name="Количество сотрудников в ночь"
-    )
-    assigned_employees = models.ManyToManyField(
-        User, verbose_name="Назначенные сотрудники", blank=True
     )
 
     def __str__(self):
@@ -80,3 +78,20 @@ class Vacation(models.Model):
         verbose_name = "Отпуск"
         verbose_name_plural = "Отпуска"
         ordering = ["employee", "start_date"]
+
+
+class ShiftAssignment(models.Model):
+    shift = models.ForeignKey(
+        Shift, on_delete=models.CASCADE, verbose_name="Смена")
+    employee = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Сотрудник")
+    shift_type = models.CharField(
+        max_length=20,
+        choices=SHIFT_TYPES, verbose_name="Тип смены"
+    )
+
+    class Meta:
+        unique_together = ("shift", "employee")
+
+    def __str__(self):
+        return f"{self.employee} назначен на {self.shift} {self.shift_type}"

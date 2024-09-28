@@ -174,7 +174,15 @@
         </li>
     </ul>
 </div>
-
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li
+            {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
 <header data-bs-theme="auto">
     <div class="container-fluid">
         <div class="row">
@@ -190,6 +198,5 @@
 </header>
 {% include 'includes/pagination.html' %}
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
 </body>
 </html>
