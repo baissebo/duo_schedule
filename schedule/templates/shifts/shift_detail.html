@@ -11,15 +11,42 @@
                     <p class="text-primary"><strong>Утро: {{ shift.morning_needed }}</strong></p>
                     <p class="text-secondary"><strong>День: {{ shift.day_needed }}</strong></p>
                     <p class="text-warning"><strong>Ночь: {{ shift.night_needed }}</strong></p>
-                    <p class="card-text"><strong>Назначенные сотрудники:</strong></p>
-                    {% if shift.assigned_employees.all %}
-                    <ul>
-                        {% for employee in shift.assigned_employees.all %}
-                        <li>{{ employee.get_full_name }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
+                    {% if not assignments %}
                     <p>Нет назначенных сотрудников</p>
+                    {% else %}
+                    <p class="card-text"><strong>Назначенные сотрудники:</strong></p>
+                    <div>
+                        <h6 class="text-primary">Утро:</h6>
+                        <ul>
+                            {% for assignment in assignments %}
+                            {% if assignment.shift_type == "morning" %}
+                            <li class="text-primary">{{ assignment.employee.get_full_name }}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h6 class="text-secondary">День:</h6>
+                        <ul>
+                            {% for assignment in assignments %}
+                            {% if assignment.shift_type == "day" %}
+                            <li class="text-secondary">{{ assignment.employee.get_full_name }}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h6 class="text-warning">Ночь:</h6>
+                        <ul>
+                            {% for assignment in assignments %}
+                            {% if assignment.shift_type == "night" %}
+                             <li class="text-warning">{{ assignment.employee.get_full_name }}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
                     {% endif %}
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">

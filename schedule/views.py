@@ -1,9 +1,9 @@
 import calendar
 from datetime import datetime
 
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -15,15 +15,9 @@ from django.views.generic import (
 )
 
 from schedule.forms import EmployeeWishForm, ScheduleForm, ShiftForm, VacationForm
-from schedule.models import Schedule, Shift, EmployeeWish, Vacation
-from schedule.utils import assign_employees
+from schedule.models import Schedule, Shift, EmployeeWish, Vacation, ShiftAssignment
+from schedule.utils import assign_employees, is_on_vacation
 from users.models import User
-
-
-class ScheduleListView(LoginRequiredMixin, ListView):
-    model = Schedule
-    template_name = "schedule/schedule_list.html"
-    paginate_by = 1
 
 
 class ScheduleDetailView(LoginRequiredMixin, DetailView):
@@ -60,7 +54,7 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
             night_needed = 3
         else:
             morning_needed = 2
-            day_needed = 5
+            day_needed = 3
             night_needed = 2
 
         for day in range(1, num_days + 1):
@@ -121,6 +115,13 @@ class ShiftListView(LoginRequiredMixin, ListView):
 class ShiftDetailView(LoginRequiredMixin, DetailView):
     model = Shift
     template_name = "shifts/shift_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        shift = self.object
+        assignments = ShiftAssignment.objects.filter(shift=shift)
+        context["assignments"] = assignments
+        return context
 
 
 class ShiftCreateView(LoginRequiredMixin, CreateView):

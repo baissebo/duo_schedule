@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from schedule.models import EmployeeWish, Schedule, Shift, Vacation
+from schedule.models import EmployeeWish, Schedule, Shift, Vacation, ShiftAssignment
 
 
 @admin.register(EmployeeWish)
@@ -21,3 +21,8 @@ class Shift(admin.ModelAdmin):
 @admin.register(Vacation)
 class Vacation(admin.ModelAdmin):
     list_display = ("schedule", "employee", "start_date", "end_date")
+
+
+@admin.register(ShiftAssignment)
+class ShiftAssignment(admin.ModelAdmin):
+    list_display = ("shift", "employee", "shift_type")
